@@ -1,0 +1,110 @@
+NPM是随同NodeJS一起安装的包管理工具，能够解决NodeJS代码部署上的很多问题,常用的使用场景
+	允许用户从NPM服务器上下载别人编写的第三方包到本地使用
+	允许用户从NPM服务器上下载并安装别人编写命令行程序到本地使用
+	允许用户将自己编写的包或命令行程序上传到NPM服务器供别人使用	
+	
+	新版的Node.js已经集成了npm，所以不需要安装
+	使用npm命令安装模块
+		npm install 模块的名字
+	   eg:npm install express
+	     这样将把express模块安装到了本地,可以在node_module文件夹中看到
+		 安装完成之后,在代码中只需要通过require('express')方式就好，无需指定第三方包路径
+		 
+	npm的安装方式有两种
+		1.本地安装
+			就是将当前模块下载到当前命令行所在的目录
+			比如:c:\123>npm install xxx
+			这样就会下载到c:\123\node_modules\xxx目录下面
+			同时本地安装可以通过require()来引入本地安装的包
+		2.全局安装
+			全局安装则会将模块下载到我们所指定的目录下面
+			默认是安装在/usr/local下
+			通过npm config set prefix '目录路径'来设置目录
+			通过 npm config get prefix来获取当前目录
+			比如: npm config set prefix  D:\NodeJs
+				  npm install express -g
+				  下载到的目录就在  d:\NodeJS\node_module\express下面
+		    通过全局方式安装，可以直接在命令行中使用
+			但是也有一个缺点就是不能通过require()来引入本地安装的包
+		所以我们一般都会使用全局安装方式统一安装到一个目录下面
+	   
+	使用package.json
+		package.json位于目录下,用于定义包的属性，每一个模块下面都有一个package.json文件
+		Package.json属性说明:
+			homepage:包的官网地址
+			respository:包代码存放的地方的类型，可以是git或svn
+			main:main字段是一个模块ID
+			
+	卸载模块
+		npm uninstall express
+	更新模块
+		npm update express
+	搜索模块
+		npm search express
+	
+	创建模块
+		创建模块,package.json文件是不可少的,我们可以使用NPM生成package.json文件
+		我们可以手动创建package.json文件，当然npm也可以创建package.json文件
+		npm init用来创建package.json文件
+		在生成package.json文件后,我们是可以使用npm adduser在资源库中注册用户
+		注册成功后,使用npm publish来发布我们的模块
+		eg:npm init
+		   npm adduser
+		   npm publish
+	
+	版本号
+		使用npm下载和发布代码时都会接触到版本号,NPM使用语义版本号来管理代码
+		语义版本号为X,Y,Z三位,分别代表版本号·,次版本和补丁版本号,当代码变更时,版本号使用如下规则
+			如果只是修复bug,需要更新Z位
+			如果是新增功能,但是向下兼容,需要更新Y位
+			如果有大变动,向下不兼容,需要更新X位
+			
+	NPM常用命令
+		NPM常用命令:
+			NPM提供了很多命令,例如install和publish,使用 npm help可查看所有命令
+			使用npm help <command>可查看某条命令的详细帮助，eg:npm help install
+			使用npm update <package>可以把当前目录下node_modules子目录里面
+				对应模块更新成最新的版本
+			使用npm update <package> -g;
+			使用npm cache clear可以清空NPM本地缓存,用来对付使用相同版本号
+				发布新版本代码的人
+			使用npm unpublish <package>@<version>可以撤销发布自己发不过的某个版本的代码
+			
+		例如我们要发布一个模块
+			1.在要发布的模块下使用cmd进入命令行
+			2.使用npm init创建package.json文件
+			3.如果没有用户,使用npm adduser来创建用户
+			4.使用npm publish来发布模块·
+			
+			
+	Node.js  REPL
+		Node.js REPL就类似与浏览器的console，可以执行一些javascript命令
+		1.启动Node的终端
+			node
+		2.可以在Node的终端中，进行javascript的语法
+		
+	Node.js回调函数
+		Node.js异步编程的直接体现就是回调
+		回调函数在完成任务后被调用,Node使用了大量的回调函数,Node所有API都支持回调函数
+		用两个例子来解释以下:阻塞代码和非阻塞代码
+			阻塞代码;var fs=require('fs');
+					 var data=fs.readFileSync('input.txt');
+					 console.log(data.toString());
+					 console.log('程序执行结束了');
+				以上代码的执行效果
+					node main.js
+					 input.txt的内容
+					 程序结束了
+			非阻塞代码:var fs=require('fs');
+						fs.readFile('input.txt',function(err,data){
+							if(err) return console.error(err);
+							console.log(data.toString());
+						});
+						console.log('程序执行结束了');
+				以上代码执行结果;
+					node main.js
+					  程序执行结束了
+					  input.txt的内容
+				第一个实例在稳健读取完后才执行完程序,第二种放肆可以在读取文件的同时执行接下来的
+				代码,提高了代码的允许效率,也就是说阻塞式是按顺序执行的，而非阻塞式不是按顺序的
+				所以说如果我们要处理回调函数的参数，那么一定需要写在回调函数中

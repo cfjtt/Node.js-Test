@@ -1,0 +1,77 @@
+在浏览器Javascript中，通常widnow是全局对象，而在Node.js中全局对象是global,所有全局变量都是global对象的属性
+在Node.js我们可以直接访问到global的属性，而不需要在应用中包含它
+	全局对象与全局变量
+		global最根本的作用是作为全局变量的宿主,满足以下条件的变量是全局变量
+			在最外层定义的变量
+			全局对象的属性
+			隐式定义的变量(未定义直接赋值的变量)
+		在Node.js中你不可能在最外层定义变量，因为所有的代码都是属于当前模块的
+	注意:我们一直强调的，永远使用var定义变量避免引入全局变量，因为全局变量会污染命名空间，提高代码的耦合风险
+	
+	_filename
+		表示当前正在执行的脚本的文件名，它将输出所在位置的绝对路径
+		//输出全局变量_filename的值
+		console.log(_filename)
+	
+	_dirname
+		_dirname表示当前执行脚本所在的目录
+		console.log(_dirname)
+	
+	setTimeout(function,ms)
+	
+	clearTimeout(t)
+		eg:var t=setTimeout();
+			clearTimeout(t);
+			
+	setInterval()
+	console中还有一系列方法
+		console.trace()  当前执行代码在堆栈中的调用路径，这个测试函数运行很有帮助
+		
+	process
+		process是一个全局变量，即global对象的属性
+		它用于描述当前node.js进程状态的对象，同样也是比较重要的
+		process最常用的成员方法
+			exit  当进程准备退出时触发
+			beforeExit  当node清空事件循环,并且没有其他安排时触发这个事件,通常说，
+				当没有进程安排时，node将退出，此时beforeExit的监听器可以异步调用
+				这样node就会继续执行
+			uncaughtException
+				当一个异常冒泡回到事件循环，触发这个事件，如果给异常添加了监听器,就不会
+				发生
+			Signal事件
+				当进程接收到信号时触发
+				
+			process.on("exit",function(code){
+				console.log("退出码为"+code);
+			})
+			
+		process属性
+			stdout  标准输出流
+			stderr	标准错误流
+			stdin	标准输入流
+			argv    返回一个数组,由命令执行脚本时的各个参数组成,它的第一个成员总是node
+					第二个成员是脚本文件名，其余是脚本文件的参数
+			execPath 返回执行当前脚本的Node二进制文件的绝对路径
+			env		返回一个对象，成员是当前shell的环境变量
+			exitCode
+			versions  一个属性,包含了node的版本和依赖
+			config	 一个包含用来编译当前node执行文件的javascript配置选项的对象
+			pid		 当前进程的进程号
+			title	 进程名
+			arch	 当前CPU的架构
+			platform	运行程序所在的平台系统
+		
+		process系统提供了很多方法，便于我们更好的控制系统的交互
+			abort()   这将导致node触发abort事件,会让node退出并生成一个核心文件
+			chdir(directory)	改变当前工作进程的目录，如果操作失败会抛出异常
+			cwd()	返回当前进程的工作目录
+			exit(code)	使用指定的code结束进程
+			getgid()  获取进程的群组标识
+			setgid(id)   设置进程的群组标识
+			getuid()	获取进程的用户标识
+			setuid(id)
+			kill(pid,signal)	发送信号给进程
+			memoryUsage()	返回一个对象，描述了Node进程所用的内存状况,单位为字节
+			nextTick(callback)	一旦当前事件循环结束,调用回调函数
+			uptime()	返回Node已经运行的秒数
+			hrtime()	返回当前进程的高分辨时间

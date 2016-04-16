@@ -1,0 +1,9 @@
+在Javascript中,函数也可以作为一个参数进行传递，Node.js中函数的使用和javascript类型
+	function say(word){
+		console.log(word);
+	}
+	function execute(someFunction,value){
+		someFunction(value);
+	}
+	execute(say,"Hello"
+	)

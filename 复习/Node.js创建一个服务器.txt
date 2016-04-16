@@ -1,0 +1,127 @@
+1.使用require()来引入模块，其中require可以引入模块的字符串同时也可以引入模块的文件
+2.创建Node.js服务器
+	http.createServer().listen(int port,String ip);
+	
+	var http=require("http");
+	http.createServer(function(request,response){
+		response.writeHead(200,{"Content-type":"text/plain"});
+		response.end("Hello Wolrd");
+	}).listen(8088)
+	
+	
+NPM使用介绍
+	查看版本号  npm -v
+	模块的安装：（1）本地安装 ：npm install 模块的名字
+						安装的位置是当前命令行所在的目录下
+						可以使用require()来应用
+				(2)全局安装:npm install 模块的名字 -g
+						安装的位置是usr/local目录下
+						可以在命令行中直接使用，但是不可以使用require来映入
+						我们可以通过 npm config set prefix 目录来指定模块安装的路径
+	卸载模块 ：在要卸载的模块的目录下 npm uninstall 模块的名字
+	更新模块   npm  update 模块的名字
+	搜索模块   npm search  模块的名字
+	创建模块：首先创建模块必须要有package.json文件
+				如果没有我们可以手动构建，同样也可以使用npm init来构建
+				在上面的package.json文件构建完成之后
+				可以使用npm adduser来注册一个新的用户
+				然后使用npm publish来发布我们的模块
+				在发布完成之后，我们就可以使用npm install 来进行我们模块的安装等等操作
+	同样重要的一些npm的指令
+			npm cache clear可以清空npm缓存
+			npm  unpublish <package>@<version> 可以清空我们之前发布过的某个版本的代码
+			
+
+Node.js事件循环
+	Node.js的事件都是采用的设计模式中的观察者模式
+	Node.js使用事件驱动模式,当webserver接收到请求后，就把它关闭然后进行处理，然后去
+	服务下一个请求,这种做法的效率非常高,因为webserver一直在处理请求，无需等待任何的读写操作
+	事件操作的一般步骤
+	1.引入事件模块
+	var event=require("events");
+	2.创建eventEmitter对象
+	var eventEmitter=event.EventEmitter();
+	3.绑定事件处理的函数
+	eventEmitter.on('DemoEvent',function(){
+		...
+	})
+	4.触发事件
+	eventEmitter.emit("DemoEvent");
+	
+	
+Node.js  EventEmitter类
+	 EventEmitter的操作步骤已经在上面的Node.js的事件循环中所写
+	 EventEmitter的常用方法
+		addListener(event,listener)为指定事件添加一个监听器到事件队列的末尾
+		on(event,listener) 为指定事件注册一个监听器
+		once(event,listener)为指定事件注册一个单次监听器
+		removeListener(event,listener)
+		removeAllListener(event)
+		setMaxListener(n)默认情况下，eventEmitter如果添加的监听器超过10个会发出告警信息
+		emit(event)按顺序执行每个监听器
+		
+	类方法
+		listenCount返回监听器的数量
+		newListener
+			event
+			listener
+		该事件在添加新的监听器时会被触发
+		removeListener
+			event
+			listener
+		从指定监听器组中删除一个监听器，需要注意的是，此操作会改变之前子监听器中的索引
+		
+		
+Node.js缓冲区
+	javascript本身是没有二进制的，但是在进行tcp或者文件流操作的时候，必须使用二进制
+	在这种情况下，我们可以使用缓冲区
+	创建缓冲区
+		1.var buf=new Buffer(size)
+		2var buf=new Buffer([11,11,11]) 以数组的方式创建缓冲区
+		
+		3.var buf=new Buffer(String,'utf-8')通过字符串的方式来创建一个缓冲区
+			这是我们要是在此基础上在使用buf.write()来写入缓冲区的话会覆盖之前我们在创建
+			的时候写入缓冲的内容，比如
+			var buf=new  Buffer("缓冲区缓冲区");
+			buf.write("缓冲区1")；
+			console.log(buf.toString())
+			输出的结果是:缓冲区1冲区
+	
+	写入缓冲区
+		buf.write(string,offset,length,end)
+		返回值是返回实际写入到缓冲区的字节数
+		
+	从缓冲区读取数据
+		buf.toString(encoding,start,end);
+		
+	将buffer实例转换成json对象
+		buf.toJSON()
+		注意这个转换成的json对象格式为{type:'buffer',data:[]}
+		其中data数据最终都被转换成了整数
+	
+	缓冲区合并
+		Buffer.concat(list,totalLength);
+		eg:Buffer.concat([buffer1,buffer2,...]);
+		
+	缓冲区比较是否相等
+		buf.equals(othewrBuffer);
+		经过测试发现这里比较的方式和java中equals方式类似
+		但是以第一种方式创建缓冲区时,若不指定字符集,那么equals的时候为false
+	
+	缓冲区比较
+		buf.compare(otherBuffer)
+		返回值为一个数字，表示在之前，之后，相同
+		
+	缓冲区拷贝
+		buf.copy(targetBufer,targetStart,soureStart,sourceEnd)
+		    targetBuffer:要拷贝的buffer对象
+	
+	缓冲区裁剪
+		buf.slice(start,end)
+		注意裁剪指向的还是同一块内存地址
+	
+	缓冲区长度
+		buf.length
+			
+		
+		

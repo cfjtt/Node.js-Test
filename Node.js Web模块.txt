@@ -1,0 +1,62 @@
+目前最主流的三个Web服务器是Apache,Nginx,IIS
+	Web应用架构
+		Client:客户端,一般指浏览器
+		Server:服务端,一般是Web服务器,可以接受客户端请求，冰箱客户端发送响应数据
+		Business:业务层	通过Web服务器处理应用程序,如与数据库交互,逻辑运算等等
+		Data:数据层,一般有数据库组成
+	
+	使用Node创建Web服务器
+		Node.js使用htpp模块·，http模块主要是用于搭建HTTP服务器和客户端
+		//使用Node.js创建Web服务器
+		var http=require("http");
+		var fs=require("fs");
+		//这里我们使用get请求的方式来处理发送过来的请求
+		var url=require("url");
+		//创建服务器
+		http.createServer(function(req,res){
+			var pathname=url.parse(req.url).pathname;
+			var params=url.parse(req.url).query;
+			//从文件系统中读取请求的文件内容
+			fs.readFile(pathname,function(err,data){
+				if(err){
+					console.log(err);
+					res.writeHead(404,{"Content-Type":"text/plain"});
+					
+				}
+				res.writeHead(200,{"Content-Type:"text/plain"});
+				//响应文件内容
+				res.write(data.toString());
+				//发送响应数据
+				res.end();
+			})
+		}).listen(8080);
+		node server.js
+		
+		
+	
+	使用Node.js创建客户端
+		var http=require("http");
+		//用于请求的选项(options中信息)
+		var options={
+			host:'localhost',
+			port:'8080',
+			path:'/index.html',
+			method:'',
+			headers:{
+				"Content-Type":'application/x-www-form-urlencoded',
+				"Content-Length": data.length 
+			}
+		}
+		//向服务器端发起请求
+		var req=http.request(options,function(response){
+			var text="";
+			response.on("data",function(data){
+				text+=data;
+			})
+			response.on("end",function(){
+				//这里是get请求
+				console.log("数据接收完成"+text);
+				//如果是post请求，需要对text再次进行解析
+				querystring.parse(text);
+			})
+		})

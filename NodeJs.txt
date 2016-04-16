@@ -1,0 +1,54 @@
+Node.js的版本
+	Node.js的版本一般偶数位是稳定版本,奇数为为非稳定版本
+	我们使用nodejs，一般都要配合git bash使用，分别下载安装,安装完成后使用node -v,npm -v来查看版本号,确认是否安装成功
+	
+	第一个例子
+		起一个web服务器：
+		新建一个server.js文件
+		var http=require('http');
+		http.createServer(function(req,res){
+			res.writeHead(200,{
+				'Content-Type':'text/plain'
+			});
+			res.end('Hello World\n');
+		}).listen(1137,'127.0.0.1');
+		然后在命令行进入到找到这个文件,使用node  server.js来实现编译，这样一个简单的web服务器就搭建成功了
+		通过以上代码了解到一个nodejs应用应该是由三部分组成
+			1.引入required模块:使用require指令来载入Node.js模块
+			2.创建服务器:服务器可以监听客户端的请求
+			3.接受请求与响应请求
+		 步骤一:引入required模块
+			var http=require("http");
+		 步骤二:创建服务器
+			使用http.createServer()方法创建服务器,使用listen方法绑定端口和ip地址
+			http.createServer(callback).listen(int port,String ip);
+			当监听成功后,会调用一个回调方法
+			function callback(req,res){
+				//发送HTTP头部
+				//HTTP状态值:200:OK
+				//内容类型:text/plain
+				res.writeHead(200,{'Content-Type':'text/plain'});
+				//发送响应数据
+				res.end('Hello World\n');
+			}
+			
+			
+	NodeJs模块与Commonjs规范
+	  模块与包管理工具
+		CommonJs是一种规范，CommonJS定义了一个模块可以分为三个关键部分,定义->标识->应用,而Node.js就是对CommonJS的实现
+		
+		Node.js模块的分类
+			核心模块
+			文件模块(本地模块)
+			第三方模块
+			在Node.js中引用模块可以通过文件路径来引用也可以通过模块名来引用
+			var util=require('/utils.js');
+			var promise=require('bluebird');
+	
+	一个简单的Node.js模块
+		模块的流程: 创建模块  常见一个js文件
+					导出模块   exports.add=function(){}
+					加载模块   require('./teacher.js')
+					使用模块   require.add('Scott')
+		
+		

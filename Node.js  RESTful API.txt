@@ -1,0 +1,21 @@
+什么是REST？
+	REST即表述性状态转移是一组架构约束条件和原则,满足这些约束条件和原则的应用程序或设计
+	就是RESTful,需要注意的是REST是设计风格,而不是标准。
+	REST通常基于使用HTTP，URI和XML以及HTML这些现有的广泛流行的协议和标准,REST通常使用JSON
+	数据格式
+	
+HTTP方法
+	以下为REST基本架构的四个方法
+		GET	--用于获取数据
+		PUT	--用于添加数据
+		DELETE	--用于删除数据
+		POST	--用于更新或添加数据
+		
+RESTful Web Services
+	Web service是一个平台独立的,低耦合,自包含的,基于可编程的WEB的应用程序,可使用开放的XML
+	标准来描述,发布，发布,协调和配置这些应用程序,用于开发分布式的互操作的应用程序
+	基于REST架构德Web Services既是RESTful
+	
+	由于轻量级以及通过HTTP直接传输的特性,Web服务的RESTful方法已经成为最常见的替代方法,可
+	以使用各种语言程序实现客户端
+	

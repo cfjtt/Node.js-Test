@@ -1,0 +1,154 @@
+Javascript语言自身只有字符串数据类型,没有二进制数据类型,但是在处理TCP流或文件流时,必须使用二进制数据,因此在Node.js中，定义一个Buffer类,该类用来创建一个专门存放二进制数据的缓存区
+Buffer库为Node.js带来了一种存储原始数据的方法,可以让Node.js处理二进制数据，每当需要在Node.js中处理I/O操作中移动数据时,就有可能使用Buffer库,原始数据存储在Buffer的一个实例中，一个Buffer类似于一个整数数组,但它对应与V8堆内存之外的一块原始内存
+	
+	创建Buffer类
+		Node Buffer类通过多种方式创建
+		1.创建一个长度为10字节的Buffer实例
+			var buf=new Buffer(10);
+		
+		2.通过给定的数组创建Buffer实例
+			var buf=new Buffer([10,20,30,40,50]);
+			所以我们指定了长度之后，就可以使用给数组赋值的方法来给buffer赋值
+		3.通过创建一个字符串来创建Buffer实例
+			var buf=new Buffer('www.runoob.com','utf-8');
+			utf-8是默认的编码方式，此外它同样支持其他编码
+			
+	写入缓冲区
+		buf.write(string[,offset[,length],encoding]);
+		参数
+			string:写入缓冲区的字符串
+			offset:缓冲区开始写入的索引值,默认为0
+			length:写入的字节数，默认为buffer.length
+			encoding:使用的编码，默认为utf-8
+		返回值
+		   返回实际写入的大小,如果buffer控件不足，则只会写入部分字符串
+		
+			eg:buf=new  Buffer(256);
+				len=buf.write('www.runoob.com');
+				console.log('写入字节数:'+length);
+			注意如果所写的内容没有缓冲大，nodejs会想缓冲区中添加内容
+	
+	从缓冲区中读取数据
+		buf.toString(encoding,start,end);
+		参数:encoding:使用的编码，默认为utf-8
+			 start：指定开始读取索引的位置,默认为0
+			 end:结束位置,默认缓冲区的末尾
+		返回值
+			解码缓冲区数据并使用指定的编码返回字符串
+		eg:注意上面所说过,缓冲区就类似于一个整型的数组,所以我们可以使用数组的方式给缓冲区赋值
+			buf=new Buffer(26);
+			for(var i=0;i<26;i++){
+				buf[i]=i+97;
+			}
+			//通过数组的方式给buffer赋值
+			console.log(buf.toString('utf-8',0,5));
+			
+将Buffer转换成JSON对象
+	buf.toJSON()
+	返回值为JSON对象
+	eg:var buf=new Buffer("www.runoob.com");
+	   var json=buf.toJSON();
+	   console.log(json);
+	   注意:上面我们说过缓冲区类似于一个整型数据,通过我们把数据打印出来发现，转换成json对象后，实际上是转换成了一组整型的数字
+	   同时转化成的json对象的格式为{type:Buffer,data:[.....]}
+	   
+缓冲区合并
+	Buffer.concat(list,totalLength);
+    参数:list用于合并的Buffer对象数组
+		 totalLength 指定合并后Buffer对象的总长度
+	返回值:返回一个多个成员合并的新Buffer对象
+	eg：var buffer1=new Buffer("菜鸟教程");
+	    var buffer2=new Buffer('www.runoob.com');
+		var buffer3=Buffer.concat([buffer1,buffer2]);
+		console.log('buffers内容:'+buffer3.toString());
+		
+缓冲区比较
+	buf.compare(otherBuffer)
+	参数:otnerBuffer 与buf对象比较的另外一个Buffer对象
+	返回值:返回一个数字,表示buf在otnerBuffer之前，之后或相同
+		var buffer1=new Buffer("ABC");
+		var buffer2=new Buffer("ABCD");
+		var result=buffer1.compare(buffer2);
+		if(result<0){
+			console.log(buffer1在buffer2之前);
+		} else if(result==0){
+			console.log(相等)
+		} else {
+			console.log("在buffer2之后")
+		}
+		
+拷贝缓冲区
+	buf.copy(targetBuffer,targetStart,sourceStaret,sourceEnd)
+	参数
+		targetBuffer  要拷贝的Buffer对象
+		targetStart  数字,可选，默认为0
+		sourceStart  数字可选，默认为0
+		sourceEnd   数字，可选，默认为buffer.length
+	返回值：没有返回值
+	eg：var buffer1=new Buffer('ABC');
+	    //拷贝一个缓冲区
+		var buffer2=new Buffer(3);
+		buffer1.copy(buffer2);
+		
+缓冲区裁剪
+	buf.slice(start,end)
+	参数:start  数字，可选默认为0
+	     end   数字，可选默认为0
+	返回一个新的缓冲区,他与旧的缓冲区指向同一块内存，但是从索引start到end的位置剪切
+	
+缓冲区长度
+	buf.length
+	返回值:返回Buffer对象所占据的内存长度
+	
+方法参考手册
+	new Buffer(size)
+	new  Buffer(buffer)
+	new  Buffer(str,encoding);
+	buf.length
+	buf.write(string,offset,length,encoding)
+	buf.writeUIntLE(value,offset,byteLength,noAssert)
+		将value写入到buffer里，他有offset和byteLength决定,支持48位计算
+		var b=new Buffer(6);
+		b.writeUIntLE(0x123456780ab,0,6);
+		当noAssert为true时，不在验证value和offset的有效性，默认为false
+	buf.writeIntLE(value, offset, byteLength[, noAssert])
+	buf.writeIntBE(value, offset, byteLength[, noAssert])
+	buf.readUIntLE(offset, byteLength[, noAssert])
+		支持读取48位以下的数字,noAssert为true时,offset不在验证是否超过buffer长度
+	buf.readUIntBE(offset, byteLength[, noAssert])
+	buf.readIntBE(offset, byteLength[, noAssert])
+	buf.toString([encoding[, start[, end]]]) 读取缓冲区数据
+	buf.toJSON()  将buffer实例转换成json对象
+	buf[index]   获取或设置指定的字节，返回值代表一个字节
+	buf.equals(otherBuffer)  比较两个缓冲区是否相等,如果相等返回true,否则返回false
+	buf.compare(otherBuffer)  比较两个buffer对象，返回一个数字，表示之前，之后，相同
+	buf.copy(targetBuffer,targetStart,sourceStart,sourceEnd)
+	buf.slice(start,end)  剪切buffer对象，注意还是指向同一块内存
+	buf.readUInt8(offset[, noAssert])根据指定的偏移量，读取一个有符号 8 位整数。
+	buf.readUInt16LE(offset[, noAssert])根据指定的偏移量，使用特殊的 endian 字节序格式读取一个有符号 16 位整数。
+	buf.readUInt16BE(offset[, noAssert])根据指定的偏移量，使用特殊的 endian 字节序格式读取一个有符号 16 位整数
+	buf.readUInt32LE(offset[, noAssert])
+	buf.readUInt32BE(offset[, noAssert])
+	buf.readInt8(offset[, noAssert])根据指定的偏移量，读取一个 signed 8 位整数。
+	buf.readInt16LE(offset[, noAssert])
+	buf.readInt16BE(offset[, noAssert])
+	buf.readInt32LE(offset[, noAssert])
+	buf.readInt32BE(offset[, noAssert])
+	buf.readFloatLE(offset[, noAssert])根据指定的偏移量，使用指定的 endian 字节序格式读取一个 32 位浮点数。
+	buf.readFloatBE(offset[, noAssert])
+	buf.readDoubleLE(offset[, noAssert])根据指定的偏移量，使用指定的 endian字节序格式读取一个 64 位double。 
+	buf.readDoubleBE(offset[, noAssert])
+	buf.writeUInt8(value, offset[, noAssert])
+根据传入的 offset 偏移量将 value 写入 buffer。注意：value 必须是一个合法的有符号 8 位整数。 若参数 noAssert 为 true 将不会验证 offset 偏移量参数。 这意味着 value 可能过大，或者 offset 可能会超出 buffer 的末尾从而造成 value 被丢弃。 除非你对这个参数非常有把握，否则不要使用。默认是 false。
+	buf.writeUInt16LE(value, offset[, noAssert])根据传入的 offset 偏移量和指定的 endian 格式将 value 写入 buffer
+	buf.writeUInt16BE(value, offset[, noAssert])
+	buf.writeUInt32LE(value, offset[, noAssert])
+	buf.writeInt8(value, offset[, noAssert])
+	buf.writeInt16LE(value, offset[, noAssert])
+	buf.writeInt16BE(value, offset[, noAssert])
+	buf.writeInt32LE(value, offset[, noAssert])
+	buf.writeInt32BE(value, offset[, noAssert])
+	buf.writeFloatLE(value, offset[, noAssert])
+	buf.writeDoubleLE(value, offset[, noAssert])
+	buf.writeDoubleBE(value, offset[, noAssert])
+	buf.fill(value[, offset][, end])使用指定的 value 来填充这个 buffer。如果没有指定 offset (默认是 0) 并且 end (默认是 buffer.length) ，将会填充整个buffer。

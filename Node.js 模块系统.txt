@@ -1,0 +1,35 @@
+为了让Node.js的文件可以相互调用,Node.js提供了一个简单的模块系统
+	模块是Node.js应用程序的基本组成部分,文件和模块是一一对应的，换言之,一个Node.js文件
+	就是一个模块,这个文件可能是Javascript，JSON或者编译过的c/c++扩展
+
+	创建模块
+		var hello=require("./hello");
+			以上实例中,require("./hello")引入了当前目录下的hello.js文件
+			./表示当前目录   node,js默认后缀为js
+	    Node.js提供了exports和require两个对象，其中exports是模块公开的接口,require用于
+		从外部获取一个模块的接口,即所获取模块的exports对象
+		
+		exports.world=function(){
+			console.log("Hello Wolrd");
+		}
+		在以上示例中,hello.js通过exports对象把world作为模块的访问接口，这样在其他的js文件
+		中只要通过require("./hello"),就可以访问export中的方法了
+		eg：exports.model=function(){}
+			在main.js中
+				var hello=require("./hello");
+				hello.wolrd();
+		
+		但是有时候我们不需要直接使用方法，只是希望封装这个方法的对象,此时使用
+		module.exports=function(){}
+		eg:hello.js中
+			function hello(){
+				var name;
+				this.setName=function(){}
+				this.setHello=function(){}
+			}
+			module.exports=hello;
+			在main.js中
+				var hello=require("./hello");
+				hello=new hello();
+				hello.setName();
+		

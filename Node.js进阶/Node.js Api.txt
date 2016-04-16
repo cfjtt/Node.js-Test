@@ -1,0 +1,54 @@
+url
+	url.parse(String url);  解析浏览器的地址，并转换成json对象
+		protbcol:'http',
+		slashes:true,
+		auth:
+		host:
+		hostname
+		hash:哈希值，上面一般存放是锚点
+		search:
+		query:
+		pathname:
+		path:
+		href:
+	url.parse(String utl,boolean true)
+		当不加boolean属性的，如果url是代参数的，那么query是参数的字符串
+		当booelan为true的话,url的query会被解析成一个json对象
+	当我们需要使用url的一些参数的时候,但是不知道url具体包含哪些参数,可以在命令行
+	使用utl.parse()来查看解析出来的地址信息
+	
+	url.resolve('','','')
+		拼接生成合法的URL地址
+		
+	url.format({})将json对象转换成地址
+	
+	
+querystring
+	querystring.stringify({name:'scott',course:['jade','node']})  将对象转换成序列化后的字符串
+	querystring.stringify(object,'')
+		第二个参数表示要参数参数之间使用什么连接
+	querystring.stringify(object,'','')
+		第三个参数表示转换后的'='要使用什么替换
+		
+    querystring.parse(string,'','')
+		当string为标准的url参数的形式，后面两个参数就不需要
+		否则,第二个参数表示，使用什么来分割
+		第三个参数表示键值对之间使用什么来替换
+		
+	querystring.escape()  转义
+	querystring.unescape() 反转义
+	
+	
+	
+HTTP
+	http就是一种协议，需要遵守这个规则，之间才能进行tcp连接
+	在刷新和回车的时候。浏览器进行了很多事情
+	 地址解析
+		1.首先浏览器会搜索自身的DNS缓存，这个缓存的时间大概只有一分钟
+		2.搜索操作系统自身的DNS缓存(浏览器没有找到缓存，或者缓存已经失效)
+		3.读取本地的host文件
+		4.浏览器发起一个DNS的一个系统调用
+		5.浏览器获得域名对应的IP地址后，发起HTTP三次握手
+		6.建立TCP连接后，就可以向服务器发起请求
+		7.服务器端进行处理，把结果数据返回给浏览器
+		8.浏览器拿到数据，进行渲染

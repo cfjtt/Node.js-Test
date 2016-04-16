@@ -1,0 +1,29 @@
+获取GET请求内容
+	需要使用url,http模块
+	eg:var http=require('http');
+		var url=require('url');
+		http.createServer(function(req,res){
+			var pathname=url.parse(req.url).pathname;  端口号之后
+			var params=url.parse(req.url).query;
+		}).listen(8080);
+获取·post请求内容
+	需要使用http,querystring模块
+		post请求的内容全部都在请求体中,http.ServerRequest并没有一个属性内容为请求体，原因是等待
+		请求体传输可能是一件耗时的工作
+		所以node.js默认是不会解析请求体的，当需要时，手动来做
+			http.createServer(function(req,res){
+				var post="";  定义一个post变量用来暂时存放请求体的信息
+				req.on("data",function(chunk){  //通过req的data事件监听函数
+					每当接收到请求体的数据，就累加到post变量中
+					post+=chunk;
+					
+				});
+				
+			   req.on("end",function(){	//在end事件触发后，通过querystring.parse将
+								post解析为真正的post请求格式,然后将客户端返回
+				
+					post=querystring.parse(post);
+					res.end(util.inspect(post));
+			   })
+				
+			})

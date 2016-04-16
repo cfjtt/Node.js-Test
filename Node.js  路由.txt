@@ -1,0 +1,43 @@
+复习以下AngularJS路由
+	在html元素中配合ngView和模型声明中使用ngRoute
+AngularJS路由
+	var app=angular.module('myApp',['ngRoute']);
+	app.config(function($routeProvider){
+		$routeProvider.when("./hello",function(){
+			templateUrl:"./hello.html",
+			controller:'myCtr'
+		})
+	}).when().otherwise({
+		redirectTo:'....'
+	})
+	
+Node.js
+	我们要为路由提供请求的URL和其他需要的GET及POST参数，随后路由需要根据这些数据执行
+	相应的代码,所以我们需要查看http请求，从中提取出请求的URL以及GET/POST参数
+	我们所需要的所有数据都包含在request对象中，该对象作为onRequest()回调函数的第一个参数
+	数，但是为了解析这些数据，我们需要额外的Node.js魔铠，他们分别是url和querystring模块
+		比如对于http://localhost:8888/start?foo=bar&hello=world这样一个url
+		  url.parse(string).pathname	-->/start?foo=bar&hello=world
+		  url.parse(string).query		-->foo=bar&hello=world
+		  querystring(string)["foo"]	-->bar
+		  querystring(string)["hello"]	-->hello
+		  
+		 上面的一些方法是针对get请求的,当然我们也可以使用querystring模块来解析post请求中的参数
+		 下面这段代码是get请求
+		 var http=require("http");
+		 var url=require("url");
+		 //var querystring=require("querystring");
+		 function start(route){
+			http.createServer(function(req,res){
+				var pathname=url.parse(req.url).pathname;
+				var params= url.parse(req.url).query;
+				
+			}).listen(8088);
+		 }
+		 exports.start=start;
+		 
+		感觉路由最重要的就是引入一些模块，实现对地址参数的解析,
+		所谓路由的分发就是通过地址的解析，然后封装一些方法，是的调用这个方法时，可以根据参数的不同执行不同的操作
+		
+		上面的url模块是针对get请求，对于post请求,使用querystring模块就可以了
+		对于node.js而言，post请求的参数的形式是一个json的格式
